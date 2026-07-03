@@ -167,7 +167,7 @@ export function DataGrid() {
           />
         </div>
         <div className="flex items-center gap-2">
-          <ExcelUploader onUpload={handleExcelUpload} dataToDownload={data} />
+          <ExcelUploader onUpload={handleExcelUpload} />
           <Button onClick={() => { setIsAdding(true); setEditForm({}) }}>
             <Plus className="w-4 h-4 mr-2" />
             Add New

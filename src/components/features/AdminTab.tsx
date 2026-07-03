@@ -257,6 +257,7 @@ export function AdminTab() {
             />
           </div>
           <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setActiveSearch(searchInput)}>Search</Button>
+        </div>
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
