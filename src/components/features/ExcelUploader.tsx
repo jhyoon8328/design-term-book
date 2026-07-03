@@ -129,7 +129,8 @@ export function ExcelDownloader({ dataToDownload, fileName = "data_guide.xlsx" }
 export function AdminExcelDownloader({ dataToDownload, fileName = "fashion_term_data.xlsx" }: ExcelDownloaderProps) {
   const handleDownload = async () => {
     try {
-      const response = await fetch('/template.xlsx');
+      // 브라우저 캐시를 무시하고 항상 최신 파일을 가져오도록 타임스탬프 추가
+      const response = await fetch('/template.xlsx?t=' + new Date().getTime());
       const arrayBuffer = await response.arrayBuffer();
 
       const workbook = new ExcelJS.Workbook();
