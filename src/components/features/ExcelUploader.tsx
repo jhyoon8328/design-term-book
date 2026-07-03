@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Upload, Download } from "lucide-react"
 import * as XLSX from "xlsx-js-style"
+import ExcelJS from "exceljs"
 import { Button } from "@/components/ui/Button"
 
 interface ExcelUploaderProps {
@@ -131,27 +132,35 @@ export function AdminExcelDownloader({ dataToDownload, fileName = "fashion_term_
       const response = await fetch('/template.xlsx');
       const arrayBuffer = await response.arrayBuffer();
 
-      const wb = XLSX.read(arrayBuffer, { type: "array" });
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(arrayBuffer);
+      const worksheet = workbook.worksheets[0];
 
-      const formattedData = dataToDownload.map(item => ({
-        "Category": item.category || "",
-        "Current Term": item.current_term || "",
-        "Current Variants": item.current_variants || "",
-        "Standard EN": item.standard_en || "",
-        "Standard EN Short": item.standard_en_short || "",
-        "Korean Meaning": item.korean_meaning || "",
-        "Note": item.notes || "",
-        "Card Row": item.card_row || "",
-        "Search Name": item.search_terms || "",
-        "Use In": item.use_in ? "Y" : "N",
-        "Use Out": item.use_out ? "Y" : "N",
-        "Image": item.FashionFiles && item.FashionFiles.length > 0 ? "Y" : "",
-      }));
+      dataToDownload.forEach(item => {
+        worksheet.addRow([
+          item.category || "",
+          item.current_term || "",
+          item.current_variants || "",
+          item.standard_en || "",
+          item.standard_en_short || "",
+          item.korean_meaning || "",
+          item.notes || "",
+          item.card_row || "",
+          item.search_terms || "",
+          item.use_in ? "Y" : "N",
+          item.use_out ? "Y" : "N",
+          item.FashionFiles && item.FashionFiles.length > 0 ? "Y" : "",
+        ]);
+      });
 
-      XLSX.utils.sheet_add_json(ws, formattedData, { skipHeader: true, origin: "A2" });
-      XLSX.writeFile(wb, fileName);
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      link.click();
+      URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading admin excel:", error);
       alert("Failed to download Excel file.");
