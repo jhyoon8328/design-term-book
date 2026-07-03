@@ -147,6 +147,7 @@ export function AdminExcelDownloader({ dataToDownload, fileName = "fashion_term_
         "Search Name": item.search_terms || "",
         "Use In": item.use_in ? "Y" : "N",
         "Use Out": item.use_out ? "Y" : "N",
+        "Image": item.FashionFiles && item.FashionFiles.length > 0 ? "Y" : "",
       }));
 
       XLSX.utils.sheet_add_json(ws, formattedData, { skipHeader: true, origin: "A2" });
