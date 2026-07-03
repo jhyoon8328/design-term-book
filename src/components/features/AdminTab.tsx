@@ -257,13 +257,19 @@ export function AdminTab() {
             />
           </div>
           <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setActiveSearch(searchInput)}>Search</Button>
-        </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" asChild className="border-gray-300 text-gray-700 hover:bg-gray-100">
-            <a href="/template.xlsx" download="template.xlsx" className="flex items-center whitespace-nowrap">
-              <Download className="w-4 h-4 mr-2" />
-              Template Down
-            </a>
+          <Button 
+            variant="outline" 
+            className="border-gray-300 text-gray-700 hover:bg-gray-100 flex items-center whitespace-nowrap"
+            onClick={() => {
+              const link = document.createElement('a');
+              link.href = '/template.xlsx';
+              link.download = 'template.xlsx';
+              link.click();
+            }}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Template Down
           </Button>
           <ExcelUploader onUpload={handleExcelUpload} />
           <Button onClick={() => { setIsAdding(true); setEditForm({}) }} className="bg-blue-600 hover:bg-blue-700 text-white">
