@@ -6,6 +6,7 @@ import { Database } from "@/types/database.types"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table"
 import { Input } from "@/components/ui/Input"
 import { Search, Info, X } from "lucide-react"
+import { ExcelDownloader } from "./ExcelUploader"
 
 type TermRow = Database['public']['Tables']['FashionTermBook']['Row'] & { FashionFiles?: any[] }
 
@@ -66,6 +67,9 @@ export function ViewTab() {
           >
             Search
           </button>
+        </div>
+        <div className="ml-auto">
+          <ExcelDownloader dataToDownload={filteredData} fileName="fashion_term_book.xlsx" />
         </div>
       </div>
 

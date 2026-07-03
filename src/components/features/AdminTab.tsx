@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { ExcelUploader } from "./ExcelUploader"
-import { Plus, Edit2, Trash2, Check, X, Paperclip, Search, Info } from "lucide-react"
+import { Plus, Edit2, Trash2, Check, X, Paperclip, Search, Info, Download } from "lucide-react"
 
 type TermRow = Database['public']['Tables']['FashionTermBook']['Row'] & { FashionFiles?: any[] }
 
@@ -259,7 +259,13 @@ export function AdminTab() {
           <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setActiveSearch(searchInput)}>Search</Button>
         </div>
         <div className="flex items-center gap-2">
-          <ExcelUploader onUpload={handleExcelUpload} dataToDownload={filteredData} fileName="fashion_term_book.xlsx" />
+          <Button variant="outline" asChild className="border-gray-300 text-gray-700 hover:bg-gray-100">
+            <a href="/template.xlsx" download="template.xlsx" className="flex items-center whitespace-nowrap">
+              <Download className="w-4 h-4 mr-2" />
+              Template Down
+            </a>
+          </Button>
+          <ExcelUploader onUpload={handleExcelUpload} />
           <Button onClick={() => { setIsAdding(true); setEditForm({}) }} className="bg-blue-600 hover:bg-blue-700 text-white">
             <Plus className="w-4 h-4 mr-2" />
             Add Row

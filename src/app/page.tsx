@@ -11,7 +11,22 @@ const TABS = [
 ]
 
 export default function Home() {
-  const [activeTab, setActiveTab] = React.useState("view")
+  const [activeTab, setActiveTabState] = React.useState("view")
+  const [isMounted, setIsMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setIsMounted(true)
+    const saved = sessionStorage.getItem('activeTab')
+    if (saved) setActiveTabState(saved)
+  }, [])
+
+  const setActiveTab = (tab: string) => {
+    setActiveTabState(tab)
+    sessionStorage.setItem('activeTab', tab)
+  }
+
+  // Prevent flicker on initial load
+  if (!isMounted) return null;
 
   return (
     <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-1 flex flex-col overflow-hidden">
