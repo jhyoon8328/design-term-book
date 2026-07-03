@@ -154,11 +154,27 @@ export function AdminExcelDownloader({ dataToDownload, fileName = "fashion_term_
         row.getCell(11).value = item.use_out ? "Y" : "N";
         row.getCell(12).value = item.FashionFiles && item.FashionFiles.length > 0 ? "Y" : "";
 
+        // J, K, L (10, 11, 12) 열은 중앙 정렬 강제 적용
+        [10, 11, 12].forEach(col => {
+          const cell = row.getCell(col);
+          if (cell.style) {
+            cell.style = { ...cell.style, alignment: { vertical: 'middle', horizontal: 'center' } };
+          } else {
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          }
+        });
+
         // 행이 템플릿의 서식을 넘어갈 경우 첫 번째 데이터 행(2행)의 서식을 복사
         if (rowIndex > 2) {
           const templateRow = worksheet.getRow(2);
           for (let col = 1; col <= 12; col++) {
-            row.getCell(col).style = templateRow.getCell(col).style;
+            // J, K, L 열은 중앙 정렬이 이미 적용되어 있으므로 덮어쓰지 않게 주의
+            const originalStyle = templateRow.getCell(col).style;
+            if (col >= 10 && col <= 12) {
+              row.getCell(col).style = { ...originalStyle, alignment: { vertical: 'middle', horizontal: 'center' } };
+            } else {
+              row.getCell(col).style = originalStyle;
+            }
           }
         }
       });
