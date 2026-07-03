@@ -136,21 +136,30 @@ export function AdminExcelDownloader({ dataToDownload, fileName = "fashion_term_
       await workbook.xlsx.load(arrayBuffer);
       const worksheet = workbook.worksheets[0];
 
-      dataToDownload.forEach(item => {
-        worksheet.addRow([
-          item.category || "",
-          item.current_term || "",
-          item.current_variants || "",
-          item.standard_en || "",
-          item.standard_en_short || "",
-          item.korean_meaning || "",
-          item.notes || "",
-          item.card_row || "",
-          item.search_terms || "",
-          item.use_in ? "Y" : "N",
-          item.use_out ? "Y" : "N",
-          item.FashionFiles && item.FashionFiles.length > 0 ? "Y" : "",
-        ]);
+      dataToDownload.forEach((item, index) => {
+        const rowIndex = index + 2;
+        const row = worksheet.getRow(rowIndex);
+
+        row.getCell(1).value = item.category || "";
+        row.getCell(2).value = item.current_term || "";
+        row.getCell(3).value = item.current_variants || "";
+        row.getCell(4).value = item.standard_en || "";
+        row.getCell(5).value = item.standard_en_short || "";
+        row.getCell(6).value = item.korean_meaning || "";
+        row.getCell(7).value = item.notes || "";
+        row.getCell(8).value = item.card_row ? Number(item.card_row) : "";
+        row.getCell(9).value = item.search_terms || "";
+        row.getCell(10).value = item.use_in ? "Y" : "N";
+        row.getCell(11).value = item.use_out ? "Y" : "N";
+        row.getCell(12).value = item.FashionFiles && item.FashionFiles.length > 0 ? "Y" : "";
+
+        // 행이 템플릿의 서식을 넘어갈 경우 첫 번째 데이터 행(2행)의 서식을 복사
+        if (rowIndex > 2) {
+          const templateRow = worksheet.getRow(2);
+          for (let col = 1; col <= 12; col++) {
+            row.getCell(col).style = templateRow.getCell(col).style;
+          }
+        }
       });
 
       const buffer = await workbook.xlsx.writeBuffer();
