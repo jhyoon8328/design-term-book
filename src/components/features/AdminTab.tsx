@@ -6,7 +6,7 @@ import { Database } from "@/types/database.types"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
-import { ExcelUploader } from "./ExcelUploader"
+import { ExcelUploader, AdminExcelDownloader } from "./ExcelUploader"
 import { Plus, Edit2, Trash2, Check, X, Paperclip, Search, Info, Download } from "lucide-react"
 
 type TermRow = Database['public']['Tables']['FashionTermBook']['Row'] & { FashionFiles?: any[] }
@@ -272,6 +272,7 @@ export function AdminTab() {
             <Download className="w-4 h-4 mr-2" />
             Template Down
           </Button>
+          <AdminExcelDownloader dataToDownload={filteredData} fileName="fashion_term_admin_data.xlsx" />
           <ExcelUploader onUpload={handleExcelUpload} />
           <Button onClick={() => { setIsAdding(true); setEditForm({}) }} className="bg-blue-600 hover:bg-blue-700 text-white">
             <Plus className="w-4 h-4 mr-2" />

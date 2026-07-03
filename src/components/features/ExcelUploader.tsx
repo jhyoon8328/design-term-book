@@ -116,11 +116,54 @@ export function ExcelDownloader({ dataToDownload, fileName = "data_guide.xlsx" }
 
   return (
     <Button 
-      className="bg-[#107c41] hover:bg-[#185c37] text-white border-none shadow-sm" 
+      className="bg-[#107c41] hover:bg-[#185c37] text-white border-none shadow-sm flex items-center whitespace-nowrap" 
       onClick={handleDownload}
     >
       <Download className="w-4 h-4 mr-2" />
       Download Excel
+    </Button>
+  )
+}
+
+export function AdminExcelDownloader({ dataToDownload, fileName = "fashion_term_data.xlsx" }: ExcelDownloaderProps) {
+  const handleDownload = async () => {
+    try {
+      const response = await fetch('/template.xlsx');
+      const arrayBuffer = await response.arrayBuffer();
+
+      const wb = XLSX.read(arrayBuffer, { type: "array" });
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+
+      const formattedData = dataToDownload.map(item => ({
+        "Category": item.category || "",
+        "Current Term": item.current_term || "",
+        "Current Variants": item.current_variants || "",
+        "Standard EN": item.standard_en || "",
+        "Standard EN Short": item.standard_en_short || "",
+        "Korean Meaning": item.korean_meaning || "",
+        "Note": item.notes || "",
+        "Card Row": item.card_row || "",
+        "Search Name": item.search_terms || "",
+        "Use In": item.use_in ? "Y" : "N",
+        "Use Out": item.use_out ? "Y" : "N",
+      }));
+
+      XLSX.utils.sheet_add_json(ws, formattedData, { skipHeader: true, origin: "A2" });
+      XLSX.writeFile(wb, fileName);
+    } catch (error) {
+      console.error("Error downloading admin excel:", error);
+      alert("Failed to download Excel file.");
+    }
+  };
+
+  return (
+    <Button 
+      className="bg-[#107c41] hover:bg-[#185c37] text-white border-none shadow-sm flex items-center whitespace-nowrap" 
+      onClick={handleDownload}
+    >
+      <Download className="w-4 h-4 mr-2" />
+      Excel Down
     </Button>
   )
 }
